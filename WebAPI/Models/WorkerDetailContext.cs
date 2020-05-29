@@ -17,5 +17,7 @@ namespace WebAPI.Models
         }
 
         public DbSet<WorkerDetail> WorkerDetails { get; set; }
+
+
     }
 }

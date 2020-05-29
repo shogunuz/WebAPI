@@ -2,17 +2,15 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebAPI.Models;
 
-namespace WebAPI.Migrations
+namespace WebAPI.Migrations.WorkerHoliday
 {
-    [DbContext(typeof(WorkerDetailContext))]
-    [Migration("20200526115258_InitialCreate")]
-    partial class InitialCreate
+    [DbContext(typeof(WorkerHolidayContext))]
+    partial class WorkerHolidayContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -20,35 +18,28 @@ namespace WebAPI.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-            modelBuilder.Entity("WebAPI.Models.WorkerDetail", b =>
+            modelBuilder.Entity("WebAPI.Models.WorkerHoliday", b =>
                 {
                     b.Property<int>("PMId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("DataOfStartHoliday")
+                    b.Property<string>("Date")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(50)");
 
-                    b.Property<string>("FirstName")
+                    b.Property<string>("FIO")
                         .IsRequired()
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(50)");
 
                     b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<string>("SecondName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<string>("ThirdName")
-                        .HasColumnType("nvarchar(20)");
-
                     b.HasKey("PMId");
 
-                    b.ToTable("WorkerDetails");
+                    b.ToTable("WorkerHolidays");
                 });
 #pragma warning restore 612, 618
         }
