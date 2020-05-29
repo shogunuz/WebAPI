@@ -12,6 +12,7 @@ namespace WebAPI.Models
         private int _id;
         private string _fio;
         private int _position;
+        private DateTime _date;
 
 
         [Key]
@@ -37,7 +38,15 @@ namespace WebAPI.Models
             set => _position = value; 
         }
 
-      
-       
+
+        [Column(TypeName = "nvarchar(50)")]
+        [Required]
+        public DateTime Date
+        {
+            get => _date;
+            set => _date = value;
+        }
+
+
     }
 }
