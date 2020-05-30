@@ -2,7 +2,7 @@
 
 namespace WebAPI.Migrations.WorkerHoliday
 {
-    public partial class changetablename : Migration
+    public partial class InitialHoliday : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,15 +10,16 @@ namespace WebAPI.Migrations.WorkerHoliday
                 name: "WorkerHolidays",
                 columns: table => new
                 {
-                    PMId = table.Column<int>(nullable: false)
+                    IdForH = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
+                    PMId = table.Column<int>(type: "int", nullable: false),
                     FIO = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    Date = table.Column<string>(type: "nvarchar(50)", nullable: false)
+                    Date = table.Column<string>(type: "nvarchar(150)", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_WorkerHolidays", x => x.PMId);
+                    table.PrimaryKey("PK_WorkerHolidays", x => x.IdForH);
                 });
         }
 

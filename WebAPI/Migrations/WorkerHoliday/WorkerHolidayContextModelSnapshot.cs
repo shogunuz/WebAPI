@@ -20,24 +20,27 @@ namespace WebAPI.Migrations.WorkerHoliday
 
             modelBuilder.Entity("WebAPI.Models.WorkerHoliday", b =>
                 {
-                    b.Property<int>("PMId")
+                    b.Property<int>("IdForH")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<string>("Date")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<string>("FIO")
                         .IsRequired()
                         .HasColumnType("nvarchar(50)");
 
+                    b.Property<int>("PMId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Position")
                         .IsRequired()
                         .HasColumnType("nvarchar(20)");
 
-                    b.HasKey("PMId");
+                    b.HasKey("IdForH");
 
                     b.ToTable("WorkerHolidays");
                 });

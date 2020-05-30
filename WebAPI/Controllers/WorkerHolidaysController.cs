@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using WebAPI.Models;
+using WebAPI.somefeatures;
 
 namespace WebAPI.Controllers
 {
@@ -14,6 +15,10 @@ namespace WebAPI.Controllers
     public class WorkerHolidaysController : ControllerBase
     {
         private readonly WorkerHolidayContext _context;
+        private string VarForDate { get; set; }
+
+        private DateRecycle dateRecycle;
+        
 
         public WorkerHolidaysController(WorkerHolidayContext context)
         {
@@ -79,6 +84,10 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
+          
+            VarForDate = DateRecycle.RecyclingDate((workerHoliday.Date).ToString());
+            workerHoliday.Date = VarForDate;
+
             _context.WorkerHolidays.Add(workerHoliday);
             await _context.SaveChangesAsync();
 
@@ -105,5 +114,6 @@ namespace WebAPI.Controllers
         {
             return _context.WorkerHolidays.Any(e => e.PMId == id);
         }
+
     }
 }

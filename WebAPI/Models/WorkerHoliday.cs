@@ -10,16 +10,25 @@ namespace WebAPI.Models
     public class WorkerHoliday
     {
         private int _id;
+        private int _idForHoliday;
         private string _fio;
         private string _position;
-        private string _date;
+        public string _date;
 
 
         [Key]
-        public int PMId 
+        public int IdForH
         {
-            get => _id; 
-            set => _id = value; 
+            get => _idForHoliday;
+            set => _idForHoliday = value;
+        }
+
+        [Column(TypeName = "int")]
+        [Required]
+        public int PMId
+        {
+            get => _id;
+            set => _id = value;
         }
 
         [Column(TypeName = "nvarchar(50)")]
@@ -39,7 +48,7 @@ namespace WebAPI.Models
         }
 
 
-        [Column(TypeName = "nvarchar(50)")]
+        [Column(TypeName = "nvarchar(150)")]
         [Required]
         public string Date
         {
