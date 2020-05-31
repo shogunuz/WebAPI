@@ -17,7 +17,7 @@ namespace WebAPI.Controllers
         private readonly WorkerHolidayContext _context;
         private string VarForDate { get; set; }
 
-        private DateRecycle dateRecycle;
+        private DateRecycle dateRecycle = new DateRecycle();
         
 
         public WorkerHolidaysController(WorkerHolidayContext context)
@@ -85,8 +85,9 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
           
-            VarForDate = DateRecycle.RecyclingDate((workerHoliday.Date).ToString());
-            workerHoliday.Date = VarForDate;
+            //VarForDate = dateRecycle.RecyclingDate((workerHoliday.Date).ToString());
+           
+            workerHoliday.Date = dateRecycle.RecyclingDate((workerHoliday.Date).ToString());
 
             _context.WorkerHolidays.Add(workerHoliday);
             await _context.SaveChangesAsync();
