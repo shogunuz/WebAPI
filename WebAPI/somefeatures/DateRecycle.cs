@@ -72,11 +72,8 @@ namespace WebAPI.somefeatures
                 DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
                 DateTime parsedDateEnd = DateTime.ParseExact((dictionary[i]["DateEnd"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
 
-                DateTime parsedDateStartWorker = DateTime.ParseExact((workerHoliday.DateStart).ToString(), "MM/dd/yyyy HH:mm:ss", null);
-                DateTime parsedDateEndWorker = DateTime.ParseExact((workerHoliday.DateEnd).ToString(), "MM/dd/yyyy HH:mm:ss", null);
-
-                if ((parsedDateStart <= parsedDateStartWorker && parsedDateStartWorker <= parsedDateEnd)
-                   || (parsedDateStart <= parsedDateEndWorker && parsedDateEndWorker <= parsedDateEnd))
+                if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
+                   || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
                 {
                     schetchik(dictionary[i]["Position"]);
                 }
@@ -173,7 +170,7 @@ namespace WebAPI.somefeatures
             bool res = false;
             getDictOfH(WorkerHolidaysGetRequest());
 
-            if (psevd(woker))
+            if (psevd(woker)==true)
             { res = true; }
 
             return res;

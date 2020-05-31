@@ -85,13 +85,14 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
             bool bal = dateRecycle.HolidayCalc(workerHoliday);
-            if (bal == true)
+            if (bal == false)
             {
-                _context.WorkerHolidays.Add(workerHoliday);
-                await _context.SaveChangesAsync();
-                return CreatedAtAction("GetWorkerHoliday", new { id = workerHoliday.PMId }, workerHoliday);
+                return BadRequest();
             }
-            return NoContent();
+            _context.WorkerHolidays.Add(workerHoliday);
+                await _context.SaveChangesAsync();
+                
+          return CreatedAtAction("GetWorkerHoliday", new { id = workerHoliday.PMId }, workerHoliday);
         }
 
         // DELETE: api/WorkerHolidays/5
