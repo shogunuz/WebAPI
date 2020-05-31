@@ -19,7 +19,6 @@ namespace WebAPI.somefeatures
         public int numberOfWorkers { get; private set; } // 365
         private string workers { get; set; }
 
-        private DateRecycle dateRecycle = new DateRecycle();
         private Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
         public string WorkerHolidaysGetRequest()
         {
@@ -50,17 +49,6 @@ namespace WebAPI.somefeatures
             }
 
         }
-        public bool HolidayCalc(WorkerHoliday woker)
-        {
-            bool res = false;
-            getDictOfH(WorkerHolidaysGetRequest());
-
-            if (psevd(woker))
-            { res = true; }
-            else { res = false; }
-
-            return res;
-        }
         private void schetchik(string position)
         {
             switch (position)
@@ -79,13 +67,16 @@ namespace WebAPI.somefeatures
         }
         private void countingWorkers(WorkerHoliday workerHoliday)
         {
-            for (int i = 0; i < dateRecycle.numberOfWorkers; i++)
+            for (int i = 0; i < numberOfWorkers; i++)
             {
-                DateTime parsedDateStart = DateTime.Parse(dictionary[i]["DateStart"]);
-                DateTime parsedDateEnd = DateTime.ParseExact(((dictionary[i]["DateEnd"]).ToString()), "MM/dd/yyyy HH:mm:ss", null);
+                DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
+                DateTime parsedDateEnd = DateTime.ParseExact((dictionary[i]["DateEnd"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
 
-                if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
-                   || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
+                DateTime parsedDateStartWorker = DateTime.ParseExact((workerHoliday.DateStart).ToString(), "MM/dd/yyyy HH:mm:ss", null);
+                DateTime parsedDateEndWorker = DateTime.ParseExact((workerHoliday.DateEnd).ToString(), "MM/dd/yyyy HH:mm:ss", null);
+
+                if ((parsedDateStart <= parsedDateStartWorker && parsedDateStartWorker <= parsedDateEnd)
+                   || (parsedDateStart <= parsedDateEndWorker && parsedDateEndWorker <= parsedDateEnd))
                 {
                     schetchik(dictionary[i]["Position"]);
                 }
@@ -177,6 +168,16 @@ namespace WebAPI.somefeatures
             return res;
         }
 
+        public bool HolidayCalc(WorkerHoliday woker)
+        {
+            bool res = false;
+            getDictOfH(WorkerHolidaysGetRequest());
+
+            if (psevd(woker))
+            { res = true; }
+
+            return res;
+        }
 
     }
 }
