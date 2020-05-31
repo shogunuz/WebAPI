@@ -1,6 +1,10 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using WebAPI.Models;
 
@@ -9,26 +13,170 @@ namespace WebAPI.somefeatures
     public class DateRecycle
     {
 
-        private int numberOfMonth { get; set; } = 0;
+        public int qa { get; private set; }
+        public int dev { get; private set; }
+        public int tm { get; private set; }
+        public int numberOfWorkers { get; private set; } // 365
+        private string workers { get; set; }
 
-        private List <int> currentWorker { get; set; }
-        public string RecyclingDate(string str)
+        private DateRecycle dateRecycle = new DateRecycle();
+        private Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
+        public string WorkerHolidaysGetRequest()
         {
-            str = str.Remove(0, 4).Remove(12, 54).Remove(24);
-            //string[] time = str.Split(' ').ToArray();
-          /* 
-            Sometmp = months(time[0].ToString()); // (String.Join(time[0]))
-            time[0] = time[1];
-            time[1] = Sometmp;
-            time[2] = time[2].ToString() + " /";
+            WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
+            WebResponse response = request.GetResponse();
+            using (Stream dataStream = response.GetResponseStream())
+            {
+                StreamReader reader = new StreamReader(dataStream);
+                string responseFromServer = reader.ReadToEnd();
+                workers = responseFromServer;
+            }
+            response.Close();
 
-            Sometmp = months(time[4].ToString()); // (String.Join(time[0]))
-            time[4] = time[5];
-            time[5] = Sometmp;
-            */
-           // str = string.Join(" ", time);
-            return str.Trim();
+            return workers;
         }
-        
+        private void getDictOfH(string jsonInput)
+        {
+            Console.WriteLine(jsonInput + "\n\n");
+            var objects = JsonConvert.DeserializeObject<List<object>>(jsonInput);
+            var result = objects.Select(obj => JsonConvert.SerializeObject(obj)).ToArray();
+            numberOfWorkers = result.Length;
+            JObject jsonObj;
+            for (int i = 0; i < numberOfWorkers; i++)
+            {
+                jsonObj = JObject.Parse(result[i]);
+                Dictionary<string, string> dictObj = jsonObj.ToObject<Dictionary<string, string>>();
+                dictionary.Add(i, new Dictionary<string, string>(dictObj));
+            }
+
+        }
+        public bool HolidayCalc(WorkerHoliday woker)
+        {
+            bool res = false;
+            getDictOfH(WorkerHolidaysGetRequest());
+
+            if (psevd(woker))
+            { res = true; }
+            else { res = false; }
+
+            return res;
+        }
+        private void schetchik(string position)
+        {
+            switch (position)
+            {
+                case "QA":
+                    qa++;
+                    break;
+                case "Developer":
+                    dev++;
+                    break;
+                case "TeamLead":
+                    tm++;
+                    break;
+                default: break;
+            }
+        }
+        private void countingWorkers(WorkerHoliday workerHoliday)
+        {
+            for (int i = 0; i < dateRecycle.numberOfWorkers; i++)
+            {
+                DateTime parsedDateStart = DateTime.Parse(dictionary[i]["DateStart"]);
+                DateTime parsedDateEnd = DateTime.ParseExact(((dictionary[i]["DateEnd"]).ToString()), "MM/dd/yyyy HH:mm:ss", null);
+
+                if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
+                   || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
+                {
+                    schetchik(dictionary[i]["Position"]);
+                }
+            }
+        }
+        private bool psevd(WorkerHoliday woker)
+        {
+            bool res = false;
+            switch (woker.Position)
+            {
+                case "QA":
+                    countingWorkers(woker);
+                    if (dev < 1)
+                    {
+                        if (qa < 4)
+                        {
+                            res = true;
+                        }
+                        else
+                        {
+                            res = false;
+                        }
+                    }
+                    else
+                    {
+                        if (qa < 2)
+                        {
+                            res = true;
+                        }
+                        else
+                        {
+                            res = false;
+                        }
+                    }
+                    break;
+                case "Developer":
+                    countingWorkers(woker);
+                    if (tm < 1)
+                    {
+                        if (qa < 2)
+                        {
+                            if (dev < 3)
+                            {
+                                res = true;
+                            }
+                            else
+                            {
+                                res = false;
+                            }
+                        }
+                        else
+                        {
+                            if (dev < 1)
+                            {
+                                res = true;
+                            }
+                            else
+                            {
+                                res = false;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        res = false;
+                    }
+                    break;
+                case "TeamLead":
+                    countingWorkers(woker);
+                    if (dev < 1)
+                    {
+                        if (tm < 2)
+                        {
+                            res = true;
+                        }
+                        else
+                        {
+                            res = false;
+                        }
+                    }
+                    else
+                    {
+                        res = false;
+                    }
+                    break;
+                default: break;
+            }
+
+            return res;
+        }
+
+
     }
 }

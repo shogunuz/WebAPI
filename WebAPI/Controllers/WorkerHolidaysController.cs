@@ -87,7 +87,7 @@ namespace WebAPI.Controllers
           
             //VarForDate = dateRecycle.RecyclingDate((workerHoliday.Date).ToString());
            
-            workerHoliday.Date = dateRecycle.RecyclingDate((workerHoliday.Date).ToString());
+           // workerHoliday.Date = dateRecycle.RecyclingDate((workerHoliday.Date).ToString());
 
             _context.WorkerHolidays.Add(workerHoliday);
             await _context.SaveChangesAsync();

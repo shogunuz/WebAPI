@@ -25,7 +25,11 @@ namespace WebAPI.Migrations.WorkerHoliday
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Date")
+                    b.Property<string>("DateEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("DateStart")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)");
 

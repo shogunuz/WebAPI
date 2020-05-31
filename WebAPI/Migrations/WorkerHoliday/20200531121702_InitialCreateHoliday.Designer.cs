@@ -9,8 +9,8 @@ using WebAPI.Models;
 namespace WebAPI.Migrations.WorkerHoliday
 {
     [DbContext(typeof(WorkerHolidayContext))]
-    [Migration("20200530045214_InitialHoliday")]
-    partial class InitialHoliday
+    [Migration("20200531121702_InitialCreateHoliday")]
+    partial class InitialCreateHoliday
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,7 +27,11 @@ namespace WebAPI.Migrations.WorkerHoliday
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Date")
+                    b.Property<string>("DateEnd")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(150)");
+
+                    b.Property<string>("DateStart")
                         .IsRequired()
                         .HasColumnType("nvarchar(150)");
 

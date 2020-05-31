@@ -2,7 +2,7 @@
 
 namespace WebAPI.Migrations.WorkerHoliday
 {
-    public partial class InitialHoliday : Migration
+    public partial class InitialCreateHoliday : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,7 +15,8 @@ namespace WebAPI.Migrations.WorkerHoliday
                     PMId = table.Column<int>(type: "int", nullable: false),
                     FIO = table.Column<string>(type: "nvarchar(50)", nullable: false),
                     Position = table.Column<string>(type: "nvarchar(20)", nullable: false),
-                    Date = table.Column<string>(type: "nvarchar(150)", nullable: false)
+                    DateStart = table.Column<string>(type: "nvarchar(150)", nullable: false),
+                    DateEnd = table.Column<string>(type: "nvarchar(150)", nullable: false)
                 },
                 constraints: table =>
                 {

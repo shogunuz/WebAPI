@@ -13,7 +13,8 @@ namespace WebAPI.Models
         private int _idForHoliday;
         private string _fio;
         private string _position;
-        public string _date;
+        public DateTime _dateStart;
+        public DateTime _dateEnd;
 
 
         [Key]
@@ -50,10 +51,18 @@ namespace WebAPI.Models
 
         [Column(TypeName = "nvarchar(150)")]
         [Required]
-        public string Date
+        public DateTime DateStart
         {
-            get => _date;
-            set => _date = value;
+            get => _dateStart;
+            set => _dateStart = value;
+        }
+
+        [Column(TypeName = "nvarchar(150)")]
+        [Required]
+        public DateTime DateEnd
+        {
+            get => _dateEnd;
+            set => _dateEnd = value;
         }
 
 
