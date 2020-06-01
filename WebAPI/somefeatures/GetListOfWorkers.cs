@@ -10,7 +10,7 @@ namespace WebAPI.somefeatures
 {
     public class GetListOfWorkers
     {
-        public int numberOfWorkers { get; private set; } // 365
+        public int NumberOfWorkers { get; private set; } // 365
 
         //Делаю запрос в БД чтобы получить json данные о сотрудниках, отправленных на отпуск
         private string GetStringOfH()
@@ -36,9 +36,9 @@ namespace WebAPI.somefeatures
             Console.WriteLine(jsonInput + "\n\n");
             var objects = JsonConvert.DeserializeObject<List<object>>(jsonInput);
             var result = objects.Select(obj => JsonConvert.SerializeObject(obj)).ToArray();
-            numberOfWorkers = result.Length;
+            NumberOfWorkers = result.Length;
             JObject jsonObj;
-            for (int i = 0; i < numberOfWorkers; i++)
+            for (int i = 0; i < NumberOfWorkers; i++)
             {
                 jsonObj = JObject.Parse(result[i]);
                 Dictionary<string, string> dictObj = jsonObj.ToObject<Dictionary<string, string>>();

@@ -14,38 +14,38 @@ namespace WebAPI.somefeatures
     public class DateRecycle
     {
 
-        public int qa { get; private set; }
-        public int dev { get; private set; }
-        public int tm { get; private set; }
-        public int selfself { get; private set; } = 0;
-        public int idNumber { get; private set; }
-        public int numberOfWorkers { get; private set; } // 365
+        public int Qa { get; private set; }
+        public int Dev { get; private set; }
+        public int TL { get; private set; }
+        public int Selfself { get; private set; } = 0;
+        public int IdNumber { get; private set; }
+        public int NumberOfWorkers { get; private set; } // 365
 
-        private GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
+        private readonly GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
 
         private Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
       
        
-        private void schetchik(string position)
+        private void Schetchik(string position)
         {
             switch (position)
             {
                 case "QA":
-                    qa++;
+                    Qa++;
                     break;
                 case "Developer":
-                    dev++;
+                    Dev++;
                     break;
                 case "TeamLead":
-                    tm++;
+                    TL++;
                     break;
                 default: break;
             }
         }
-        private void countingWorkers(WorkerHoliday workerHoliday)
+        private void CountingWorkers(WorkerHoliday workerHoliday)
         {
             int cnt = 0;
-            for (int i = 0; i < numberOfWorkers; i++)
+            for (int i = 0; i < NumberOfWorkers; i++)
             {
                 cnt = Int32.Parse(dictionary[i]["PMId"]);
                 DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
@@ -54,29 +54,29 @@ namespace WebAPI.somefeatures
                 if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
                    || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
                 {
-                    schetchik(dictionary[i]["Position"]);
+                    Schetchik(dictionary[i]["Position"]);
                     if (cnt == workerHoliday.PMId)
-                        selfself++;
+                        Selfself++;
                 }
                 else if ((workerHoliday.DateStart <= parsedDateStart && parsedDateStart <= workerHoliday.DateEnd)
                  || (workerHoliday.DateStart <= parsedDateEnd && parsedDateEnd <= workerHoliday.DateEnd))
                 {
-                    schetchik(dictionary[i]["Position"]);
+                    Schetchik(dictionary[i]["Position"]);
                     if (cnt == workerHoliday.PMId)
-                        selfself++;
+                        Selfself++;
                 }
             }
         }
-        private bool proverka(WorkerHoliday woker)
+        private bool Proverka(WorkerHoliday woker)
         {
             bool res = false;
             switch (woker.Position)
             {
                 case "QA":
-                    countingWorkers(woker);
-                     if (dev == 0&&selfself==0)
+                    CountingWorkers(woker);
+                     if (Dev == 0&&Selfself==0)
                         {
-                            if (qa < 3)
+                            if (Qa < 3)
                             {
                                 res = true;
                             }
@@ -87,7 +87,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (qa < 1)
+                            if (Qa < 1)
                             {
                                 res = true;
                             }
@@ -99,12 +99,12 @@ namespace WebAPI.somefeatures
                     
                     break;
                 case "Developer":
-                    countingWorkers(woker);
-                    if (tm == 0 && selfself == 0)
+                    CountingWorkers(woker);
+                    if (TL == 0 && Selfself == 0)
                     {
-                        if (qa < 2)
+                        if (Qa < 2)
                         {
-                            if (dev < 2)
+                            if (Dev < 2)
                             {
                                 res = true;
                             }
@@ -115,7 +115,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (dev == 0)
+                            if (Dev == 0)
                             {
                                 res = true;
                             }
@@ -131,10 +131,10 @@ namespace WebAPI.somefeatures
                     }
                     break;
                 case "TeamLead":
-                    countingWorkers(woker);
-                    if (dev == 0 && selfself == 0)
+                    CountingWorkers(woker);
+                    if (Dev == 0 && Selfself == 0)
                     {
-                        if (tm < 1)
+                        if (TL < 1)
                         {
                             res = true;
                         }
@@ -160,11 +160,11 @@ namespace WebAPI.somefeatures
             try
             {
                 dictionary = getListOfWorkers.GetListOfHolidays();
-                numberOfWorkers = getListOfWorkers.numberOfWorkers;
+                NumberOfWorkers = getListOfWorkers.NumberOfWorkers;
             }
-            catch(Exception ex) { }
+            catch (Exception) { }
 
-            if (proverka(woker)==true)
+            if (Proverka(woker)==true)
             { res = true; }
 
             return res;

@@ -15,11 +15,9 @@ namespace WebAPI.Controllers
     public class WorkerHolidaysController : ControllerBase
     {
         private readonly WorkerHolidayContext _context;
-        //private string VarForDate { get; set; }
 
-        private DateRecycle dateRecycle = new DateRecycle();
+        private readonly DateRecycle dateRecycle = new DateRecycle();
         
-
         public WorkerHolidaysController(WorkerHolidayContext context)
         {
             _context = context;
@@ -47,8 +45,6 @@ namespace WebAPI.Controllers
         }
 
         // PUT: api/WorkerHolidays/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPut("{id}")]
         public async Task<IActionResult> PutWorkerHoliday(int id, WorkerHoliday workerHoliday)
         {
@@ -79,8 +75,6 @@ namespace WebAPI.Controllers
         }
 
         // POST: api/WorkerHolidays
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for
-        // more details, see https://go.microsoft.com/fwlink/?linkid=2123754.
         [HttpPost]
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
