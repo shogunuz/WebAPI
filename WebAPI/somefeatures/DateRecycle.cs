@@ -20,38 +20,12 @@ namespace WebAPI.somefeatures
         public int selfself { get; private set; } = 0;
         public int idNumber { get; private set; }
         public int numberOfWorkers { get; private set; } // 365
-        private string workers { get; set; }
+
+        private GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
 
         private Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
-        public string WorkerHolidaysGetRequest()
-        {
-            WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
-            WebResponse response = request.GetResponse();
-            using (Stream dataStream = response.GetResponseStream())
-            {
-                StreamReader reader = new StreamReader(dataStream);
-                string responseFromServer = reader.ReadToEnd();
-                workers = responseFromServer;
-            }
-            response.Close();
-
-            return workers;
-        }
-        private void getDictOfH(string jsonInput)
-        {
-            Console.WriteLine(jsonInput + "\n\n");
-            var objects = JsonConvert.DeserializeObject<List<object>>(jsonInput);
-            var result = objects.Select(obj => JsonConvert.SerializeObject(obj)).ToArray();
-            numberOfWorkers = result.Length;
-            JObject jsonObj;
-            for (int i = 0; i < numberOfWorkers; i++)
-            {
-                jsonObj = JObject.Parse(result[i]);
-                Dictionary<string, string> dictObj = jsonObj.ToObject<Dictionary<string, string>>();
-                dictionary.Add(i, new Dictionary<string, string>(dictObj));
-            }
-
-        }
+      
+       
         private void schetchik(string position)
         {
             switch (position)
@@ -185,7 +159,8 @@ namespace WebAPI.somefeatures
             bool res = false;
             try
             {
-                getDictOfH(WorkerHolidaysGetRequest());
+                dictionary = getListOfWorkers.GetListOfHolidays();
+                numberOfWorkers = getListOfWorkers.numberOfWorkers;
             }
             catch(Exception ex) { }
 
