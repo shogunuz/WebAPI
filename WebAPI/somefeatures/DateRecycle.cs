@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography.Xml;
 using System.Threading.Tasks;
 using WebAPI.Models;
 
@@ -16,6 +17,8 @@ namespace WebAPI.somefeatures
         public int qa { get; private set; }
         public int dev { get; private set; }
         public int tm { get; private set; }
+        public int selfself { get; private set; } = 0;
+        public int idNumber { get; private set; }
         public int numberOfWorkers { get; private set; } // 365
         private string workers { get; set; }
 
@@ -67,55 +70,39 @@ namespace WebAPI.somefeatures
         }
         private void countingWorkers(WorkerHoliday workerHoliday)
         {
+            int cnt = 0;
             for (int i = 0; i < numberOfWorkers; i++)
             {
+                cnt = Int32.Parse(dictionary[i]["PMId"]);
                 DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
                 DateTime parsedDateEnd = DateTime.ParseExact((dictionary[i]["DateEnd"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
-
+                
                 if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
                    || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
                 {
                     schetchik(dictionary[i]["Position"]);
+                    if (cnt == workerHoliday.PMId)
+                        selfself++;
+                }
+                else if ((workerHoliday.DateStart <= parsedDateStart && parsedDateStart <= workerHoliday.DateEnd)
+                 || (workerHoliday.DateStart <= parsedDateEnd && parsedDateEnd <= workerHoliday.DateEnd))
+                {
+                    schetchik(dictionary[i]["Position"]);
+                    if (cnt == workerHoliday.PMId)
+                        selfself++;
                 }
             }
         }
-        private bool psevd(WorkerHoliday woker)
+        private bool proverka(WorkerHoliday woker)
         {
             bool res = false;
             switch (woker.Position)
             {
                 case "QA":
                     countingWorkers(woker);
-                    if (dev < 1)
-                    {
-                        if (qa < 4)
+                     if (dev == 0&&selfself==0)
                         {
-                            res = true;
-                        }
-                        else
-                        {
-                            res = false;
-                        }
-                    }
-                    else
-                    {
-                        if (qa < 2)
-                        {
-                            res = true;
-                        }
-                        else
-                        {
-                            res = false;
-                        }
-                    }
-                    break;
-                case "Developer":
-                    countingWorkers(woker);
-                    if (tm < 1)
-                    {
-                        if (qa < 2)
-                        {
-                            if (dev < 3)
+                            if (qa < 3)
                             {
                                 res = true;
                             }
@@ -126,7 +113,35 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (dev < 1)
+                            if (qa < 1)
+                            {
+                                res = true;
+                            }
+                            else
+                            {
+                                res = false;
+                            }
+                        }
+                    
+                    break;
+                case "Developer":
+                    countingWorkers(woker);
+                    if (tm == 0 && selfself == 0)
+                    {
+                        if (qa < 2)
+                        {
+                            if (dev < 2)
+                            {
+                                res = true;
+                            }
+                            else
+                            {
+                                res = false;
+                            }
+                        }
+                        else
+                        {
+                            if (dev == 0)
                             {
                                 res = true;
                             }
@@ -143,9 +158,9 @@ namespace WebAPI.somefeatures
                     break;
                 case "TeamLead":
                     countingWorkers(woker);
-                    if (dev < 1)
+                    if (dev == 0 && selfself == 0)
                     {
-                        if (tm < 2)
+                        if (tm < 1)
                         {
                             res = true;
                         }
@@ -168,9 +183,13 @@ namespace WebAPI.somefeatures
         public bool HolidayCalc(WorkerHoliday woker)
         {
             bool res = false;
-            getDictOfH(WorkerHolidaysGetRequest());
+            try
+            {
+                getDictOfH(WorkerHolidaysGetRequest());
+            }
+            catch(Exception ex) { }
 
-            if (psevd(woker)==true)
+            if (proverka(woker)==true)
             { res = true; }
 
             return res;
