@@ -1,12 +1,5 @@
-﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Security.Cryptography.Xml;
-using System.Threading.Tasks;
 using WebAPI.Models;
 
 namespace WebAPI.somefeatures
@@ -17,9 +10,9 @@ namespace WebAPI.somefeatures
         public int Qa { get; private set; }
         public int Dev { get; private set; }
         public int TL { get; private set; }
-        public int Selfself { get; private set; } = 0;
+        public int Selfself { get; private set; }
         public int IdNumber { get; private set; }
-        public int NumberOfWorkers { get; private set; } // 365
+        public int NumberOfWorkers { get; private set; }
 
         private readonly GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
 
@@ -54,7 +47,14 @@ namespace WebAPI.somefeatures
                 if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
                    || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
                 {
+                    /*
+                     * Каждый раз включаю счётчик чтобы в итоге знать сколько всего сотрудников
+                     * отправлено на отпуск в том периоде, в который собираемся добавить текущего(нового)
+                     * сотрудника.
+                     */
                     Schetchik(dictionary[i]["Position"]);
+                    
+                    //Проверяем добавили ли сотрудника, которого уже отправили в отпуск в этом периоде
                     if (cnt == workerHoliday.PMId)
                         Selfself++;
                 }
@@ -67,13 +67,13 @@ namespace WebAPI.somefeatures
                 }
             }
         }
-        private bool Proverka(WorkerHoliday woker)
+        private bool Proverka(WorkerHoliday worker)
         {
             bool res = false;
-            switch (woker.Position)
+            switch (worker.Position)
             {
                 case "QA":
-                    CountingWorkers(woker);
+                    CountingWorkers(worker);
                      if (Dev == 0&&Selfself==0)
                         {
                             if (Qa < 3)
@@ -99,7 +99,7 @@ namespace WebAPI.somefeatures
                     
                     break;
                 case "Developer":
-                    CountingWorkers(woker);
+                    CountingWorkers(worker);
                     if (TL == 0 && Selfself == 0)
                     {
                         if (Qa < 2)
@@ -131,7 +131,7 @@ namespace WebAPI.somefeatures
                     }
                     break;
                 case "TeamLead":
-                    CountingWorkers(woker);
+                    CountingWorkers(worker);
                     if (Dev == 0 && Selfself == 0)
                     {
                         if (TL < 1)
@@ -154,7 +154,7 @@ namespace WebAPI.somefeatures
             return res;
         }
 
-        public bool HolidayCalc(WorkerHoliday woker)
+        public bool HolidayCalc(WorkerHoliday worker)
         {
             bool res = false;
             try
@@ -164,7 +164,7 @@ namespace WebAPI.somefeatures
             }
             catch (Exception) { }
 
-            if (Proverka(woker)==true)
+            if (Proverka(worker) ==true)
             { res = true; }
 
             return res;
