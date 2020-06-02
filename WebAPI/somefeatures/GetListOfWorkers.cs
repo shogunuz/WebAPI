@@ -10,30 +10,7 @@ namespace WebAPI.somefeatures
 {
     public class GetListOfWorkers
     {
-        public int NumberOfWorkers { get; private set; } // 365
-        
-        private Dictionary<int, Dictionary<string, string>> GetListOfHolidays()
-        {
-            Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
-            WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
-            WebResponse response = request.GetResponse();
-            using (Stream dataStream = response.GetResponseStream())
-            {
-                StreamReader reader = new StreamReader(dataStream);
-                var objects = JsonConvert.DeserializeObject<List<object>>(reader.ReadToEnd());
-                var result = objects.Select(obj => JsonConvert.SerializeObject(obj)).ToArray();
-                NumberOfWorkers = result.Length;
-                JObject jsonObj;
-                for (int i = 0; i < result.Length; i++)
-                {
-                    jsonObj = JObject.Parse(result[i]);
-                    Dictionary<string, string> dictObj = jsonObj.ToObject<Dictionary<string, string>>();
-                    dictionary.Add(i, new Dictionary<string, string>(dictObj));
-                }
-            }
-            response.Close();
-            return dictionary;
-        }
+        public int NumberOfWorkers { get; private set; } 
         private Dictionary<int, Dictionary<string, string>> GetListOfHolidaysTew()
         {
             Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
