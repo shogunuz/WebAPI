@@ -37,13 +37,14 @@ namespace WebAPI.somefeatures
         }
         private void CountingWorkers(WorkerHoliday workerHoliday)
         {
-            int cnt = 0;
             for (int i = 0; i < NumberOfWorkers; i++)
             {
-                cnt = Int32.Parse(dictionary[i]["PMId"]);
-                DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
-                DateTime parsedDateEnd = DateTime.ParseExact((dictionary[i]["DateEnd"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
-                
+                Int32.TryParse((dictionary[i]["PMId"]), out int cnt);
+                // DateTime parsedDateStart = DateTime.ParseExact((dictionary[i]["DateStart"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
+                //DateTime parsedDateEnd = DateTime.ParseExact((dictionary[i]["DateEnd"]).ToString(), "MM/dd/yyyy HH:mm:ss", null);
+                DateTime parsedDateStart = DateTime.Parse(dictionary[i]["DateStart"]);
+                DateTime parsedDateEnd = DateTime.Parse(dictionary[i]["DateEnd"]);
+
                 if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
                    || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
                 {
