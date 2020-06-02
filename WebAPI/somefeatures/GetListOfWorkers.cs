@@ -12,7 +12,7 @@ namespace WebAPI.somefeatures
     {
         public int NumberOfWorkers { get; private set; } // 365
         
-        public Dictionary<int, Dictionary<string, string>> GetListOfHolidays()
+        private Dictionary<int, Dictionary<string, string>> GetListOfHolidays()
         {
             Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
             WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
@@ -34,6 +34,9 @@ namespace WebAPI.somefeatures
             response.Close();
             return dictionary;
         }
-
-    }
+        public Dictionary<int, Dictionary<string, string>> GetListOfHolidaysPublic()
+        {
+            return GetListOfHolidays();
+        }
+        }
 }

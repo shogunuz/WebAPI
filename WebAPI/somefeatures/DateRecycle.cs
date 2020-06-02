@@ -159,7 +159,7 @@ namespace WebAPI.somefeatures
             bool res = false;
             try
             {
-                dictionary = getListOfWorkers.GetListOfHolidays();
+                dictionary = getListOfWorkers.GetListOfHolidaysPublic();
                 NumberOfWorkers = getListOfWorkers.NumberOfWorkers;
             }
             catch (Exception) { }
