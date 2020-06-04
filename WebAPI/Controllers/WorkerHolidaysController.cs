@@ -16,9 +16,7 @@ namespace WebAPI.Controllers
     {
         private readonly WorkerHolidayContext _context;
 
-        private readonly DateRecycle dateRecycle = new DateRecycle();
-        
-        public WorkerHolidaysController(WorkerHolidayContext context)
+         public WorkerHolidaysController(WorkerHolidayContext context)
         {
             _context = context;
         }
@@ -78,11 +76,14 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
+            DateRecycle dateRecycle = new DateRecycle();
+
             bool bal = dateRecycle.HolidayCalc(workerHoliday);
             if (bal == false)
             {
                 return BadRequest();
             }
+            dateRecycle = null; // обрываем все ссылки на объект, на который ссылался dateRecycle
             _context.WorkerHolidays.Add(workerHoliday);
                 await _context.SaveChangesAsync();
                 

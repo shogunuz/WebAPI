@@ -13,8 +13,8 @@ namespace WebAPI.Models
         private int _idForHoliday;
         private string _fio;
         private string _position;
-        public DateTime _dateStart;
-        public DateTime _dateEnd;
+        private DateTime _dateStart;
+        private DateTime _dateEnd;
 
 
         [Key]
