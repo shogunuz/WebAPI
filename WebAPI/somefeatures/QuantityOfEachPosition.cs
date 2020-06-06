@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.somefeatures
 {
-    public class NumbersOfPositions
+    public class QuantityOfEachPosition
     {
         private int _qa;
         private int _dev;
@@ -31,8 +31,8 @@ namespace WebAPI.somefeatures
             get => _selfself;
             set => _selfself = value;
         }
-        public NumbersOfPositions() : this(0, 0, 0, 0) { }
-        public NumbersOfPositions(int numbersOfQA, int numbersOfDev, int numbersOfTL, int selfelf)
+        public QuantityOfEachPosition() : this(0, 0, 0, 0) { }
+        public QuantityOfEachPosition(int numbersOfQA, int numbersOfDev, int numbersOfTL, int selfelf)
         {
             QA = numbersOfQA;
             Dev = numbersOfDev;

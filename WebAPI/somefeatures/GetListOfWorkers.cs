@@ -12,6 +12,8 @@ namespace WebAPI.somefeatures
         {
             NumberOfWorkersOnHoliday = 0;
         }
+
+        // Счётчик, который считает сколько всего сотрудников на отпуске (в БД отпусков)
         private int numberOfWorkers;
         public int NumberOfWorkersOnHoliday
         {
@@ -50,6 +52,7 @@ namespace WebAPI.somefeatures
                     }
                 }
             }
+            request = null;
             return dictionary;
         }
 

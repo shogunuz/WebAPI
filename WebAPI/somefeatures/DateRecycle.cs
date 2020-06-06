@@ -6,7 +6,7 @@ namespace WebAPI.somefeatures
 {
     public class DateRecycle
     {
-        private NumbersOfPositions numbersOfPositions;
+        private QuantityOfEachPosition quantityOfEachPosition;
 
         private Dictionary<int, Dictionary<string, string>> dictionary;
         public Dictionary<int, Dictionary<string, string>> Dict
@@ -16,7 +16,7 @@ namespace WebAPI.somefeatures
         }
         public DateRecycle()
         {
-            numbersOfPositions = new NumbersOfPositions();
+            quantityOfEachPosition = new QuantityOfEachPosition();
             dictionary = new Dictionary<int, Dictionary<string, string>>();
             Dict = new Dictionary<int, Dictionary<string, string>>();
         }
@@ -34,13 +34,13 @@ namespace WebAPI.somefeatures
             switch (position)
             {
                 case "QA":
-                    numbersOfPositions.QA++;
+                    quantityOfEachPosition.QA++;
                     break;
                 case "Developer":
-                    numbersOfPositions.Dev++;
+                    quantityOfEachPosition.Dev++;
                     break;
                 case "TeamLead":
-                    numbersOfPositions.TL++;
+                    quantityOfEachPosition.TL++;
                     break;
                 default: break;
             }
@@ -65,17 +65,19 @@ namespace WebAPI.somefeatures
                     
                     //Проверяем добавили ли сотрудника, которого уже отправили в отпуск в этом периоде
                     if (cnt == workerHoliday.PMId)
-                        numbersOfPositions.Selfself++;
+                        quantityOfEachPosition.Selfself++;
                 }
                 else if ((workerHoliday.DateStart <= parsedDateStart && parsedDateStart <= workerHoliday.DateEnd)
                  || (workerHoliday.DateStart <= parsedDateEnd && parsedDateEnd <= workerHoliday.DateEnd))
                 {
                     Schetchik(Dict[i]["Position"]);
                     if (cnt == workerHoliday.PMId)
-                        numbersOfPositions.Selfself++;
+                        quantityOfEachPosition.Selfself++;
                 }
             }
         }
+        //Проверяем по алгоритму, чтобы уточнить, не превысилось ли кол-во сотрудников
+        //отправленных в отпуск, если метод даст true, значит лимит не превысился
         private bool Proverka(WorkerHoliday worker)
         {
             bool res = false;
@@ -83,9 +85,9 @@ namespace WebAPI.somefeatures
             {
                 case "QA":
                     CountingWorkers(worker);
-                     if (numbersOfPositions.Dev == 0&& numbersOfPositions.Selfself== 0)
+                     if (quantityOfEachPosition.Dev == 0&& quantityOfEachPosition.Selfself== 0)
                         {
-                            if (numbersOfPositions.QA < 3)
+                            if (quantityOfEachPosition.QA < 3)
                             {
                                 res = true;
                             }
@@ -96,7 +98,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (numbersOfPositions.QA < 1)
+                            if (quantityOfEachPosition.QA < 1)
                             {
                                 res = true;
                             }
@@ -109,11 +111,11 @@ namespace WebAPI.somefeatures
                     break;
                 case "Developer":
                     CountingWorkers(worker);
-                    if (numbersOfPositions.TL == 0 && numbersOfPositions.Selfself == 0)
+                    if (quantityOfEachPosition.TL == 0 && quantityOfEachPosition.Selfself == 0)
                     {
-                        if (numbersOfPositions.QA < 2)
+                        if (quantityOfEachPosition.QA < 2)
                         {
-                            if (numbersOfPositions.Dev < 2)
+                            if (quantityOfEachPosition.Dev < 2)
                             {
                                 res = true;
                             }
@@ -124,7 +126,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (numbersOfPositions.Dev == 0)
+                            if (quantityOfEachPosition.Dev == 0)
                             {
                                 res = true;
                             }
@@ -141,9 +143,9 @@ namespace WebAPI.somefeatures
                     break;
                 case "TeamLead":
                     CountingWorkers(worker);
-                    if (numbersOfPositions.Dev == 0 && numbersOfPositions.Selfself == 0)
+                    if (quantityOfEachPosition.Dev == 0 && quantityOfEachPosition.Selfself == 0)
                     {
-                        if (numbersOfPositions.TL < 1)
+                        if (quantityOfEachPosition.TL < 1)
                         {
                             res = true;
                         }
