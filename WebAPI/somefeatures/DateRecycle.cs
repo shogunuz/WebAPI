@@ -6,13 +6,28 @@ namespace WebAPI.somefeatures
 {
     public class DateRecycle
     {
-        private int _idnumber;
-        public int IdNumber { get => _idnumber; set => _idnumber = value; }
-        private int NumberOfWorkers;
-        private NumbersOfPositions numbersOfPositions = new NumbersOfPositions();
+        private NumbersOfPositions numbersOfPositions;
 
-        private Dictionary<int, Dictionary<string, string>> dictionary = new Dictionary<int, Dictionary<string, string>>();
-      
+        private Dictionary<int, Dictionary<string, string>> dictionary;
+        public Dictionary<int, Dictionary<string, string>> Dict
+        {
+            get => dictionary;
+            private set => dictionary = value;
+        }
+        public DateRecycle()
+        {
+            numbersOfPositions = new NumbersOfPositions();
+            dictionary = new Dictionary<int, Dictionary<string, string>>();
+            Dict = new Dictionary<int, Dictionary<string, string>>();
+        }
+
+        private int _numberOfWorkersOnHoliday;
+        private int NumberOfWorkersOnHoliday
+        {
+            get => _numberOfWorkersOnHoliday;
+            set => _numberOfWorkersOnHoliday = value;
+        }
+         
        
         private void Schetchik(string position)
         {
@@ -32,11 +47,11 @@ namespace WebAPI.somefeatures
         }
         private void CountingWorkers(WorkerHoliday workerHoliday)
         {
-            for (int i = 0; i < NumberOfWorkers; i++)
+            for (int i = 0; i < NumberOfWorkersOnHoliday; i++)
             {
-                Int32.TryParse((dictionary[i]["PMId"]), out int cnt);
-                DateTime parsedDateStart = DateTime.Parse(dictionary[i]["DateStart"]);
-                DateTime parsedDateEnd = DateTime.Parse(dictionary[i]["DateEnd"]);
+                Int32.TryParse((Dict[i]["PMId"]), out int cnt);
+                DateTime parsedDateStart = DateTime.Parse(Dict[i]["DateStart"]);
+                DateTime parsedDateEnd = DateTime.Parse(Dict[i]["DateEnd"]);
 
                 if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
                    || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
@@ -46,7 +61,7 @@ namespace WebAPI.somefeatures
                      * отправлено на отпуск в том периоде, в который собираемся добавить текущего(нового)
                      * сотрудника.
                      */
-                    Schetchik(dictionary[i]["Position"]);
+                    Schetchik(Dict[i]["Position"]);
                     
                     //Проверяем добавили ли сотрудника, которого уже отправили в отпуск в этом периоде
                     if (cnt == workerHoliday.PMId)
@@ -55,7 +70,7 @@ namespace WebAPI.somefeatures
                 else if ((workerHoliday.DateStart <= parsedDateStart && parsedDateStart <= workerHoliday.DateEnd)
                  || (workerHoliday.DateStart <= parsedDateEnd && parsedDateEnd <= workerHoliday.DateEnd))
                 {
-                    Schetchik(dictionary[i]["Position"]);
+                    Schetchik(Dict[i]["Position"]);
                     if (cnt == workerHoliday.PMId)
                         numbersOfPositions.Selfself++;
                 }
@@ -155,8 +170,8 @@ namespace WebAPI.somefeatures
 
             try
             {
-                dictionary = getListOfWorkers.GetListOfHolidaysPublic();
-                NumberOfWorkers = getListOfWorkers.NumberOfWorkers;
+                Dict = getListOfWorkers.GetListOfHolidaysPublic();
+                NumberOfWorkersOnHoliday = getListOfWorkers.NumberOfWorkersOnHoliday;
             }
             catch (Exception) { }
 
