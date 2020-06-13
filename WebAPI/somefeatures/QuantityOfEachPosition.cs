@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.somefeatures
 {
-    public class QuantityOfEachPosition
+    public class QuantityOfEachPosition  
     {
         private int _qa;
         private int _dev;

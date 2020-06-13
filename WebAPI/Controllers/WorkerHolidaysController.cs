@@ -25,6 +25,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<WorkerHoliday>>> GetWorkerHolidays()
         {
+            FreeMem.CollectMethod();
             return await _context.WorkerHolidays.ToListAsync();
         }
 
@@ -78,12 +79,15 @@ namespace WebAPI.Controllers
         {
             DateRecycle dateRecycle = new DateRecycle();
 
-            bool bal = dateRecycle.HolidayCalc(workerHoliday);
-            if (bal == false)
+            if (dateRecycle.HolidayCalc(workerHoliday) == false)
             {
                 return BadRequest();
             }
             dateRecycle = null; // обрываем все ссылки на объект, на который ссылался dateRecycle
+            FreeMem.CollectMethod();
+            
+            
+
             _context.WorkerHolidays.Add(workerHoliday);
                 await _context.SaveChangesAsync();
                 

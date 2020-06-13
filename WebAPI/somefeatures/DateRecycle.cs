@@ -1,10 +1,12 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using System;
 using System.Collections.Generic;
 using WebAPI.Models;
+using System.IO;
 
 namespace WebAPI.somefeatures
 {
-    public class DateRecycle
+    public class DateRecycle 
     {
         private QuantityOfEachPosition quantityOfEachPosition;
 
@@ -16,11 +18,11 @@ namespace WebAPI.somefeatures
         }
         public DateRecycle()
         {
-            quantityOfEachPosition = new QuantityOfEachPosition();
             dictionary = new Dictionary<int, Dictionary<string, string>>();
-            Dict = new Dictionary<int, Dictionary<string, string>>();
         }
-
+        ~DateRecycle()
+        {
+        }
         private int _numberOfWorkersOnHoliday;
         private int NumberOfWorkersOnHoliday
         {
@@ -63,7 +65,7 @@ namespace WebAPI.somefeatures
                      */
                     Schetchik(Dict[i]["Position"]);
                     
-                    //Проверяем добавили ли сотрудника, которого уже отправили в отпуск в этом периоде
+                    //Проверяем сотрудника, на предмет уже имеющегося отпуска в этом периоде
                     if (cnt == workerHoliday.PMId)
                         quantityOfEachPosition.Selfself++;
                 }
@@ -167,23 +169,36 @@ namespace WebAPI.somefeatures
 
         public bool HolidayCalc(WorkerHoliday worker)
         {
+            
             bool res = false;
             GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
+            quantityOfEachPosition = new QuantityOfEachPosition();
+            Dict = new Dictionary<int, Dictionary<string, string>>();
 
             try
             {
                 Dict = getListOfWorkers.GetListOfHolidaysPublic();
                 NumberOfWorkersOnHoliday = getListOfWorkers.NumberOfWorkersOnHoliday;
             }
-            catch (Exception) { }
-
+            catch (Exception ex) {
+                TextWriter errorWriter = Console.Error;
+                errorWriter.WriteLine("!!!Exception of getting Dict from GetListHoliday!!!");
+                errorWriter.WriteLine("Method: " + ex.TargetSite);
+                errorWriter.WriteLine("Class : " + ex.TargetSite.DeclaringType);
+                errorWriter.WriteLine("Member type: " + ex.TargetSite.MemberType);
+                errorWriter.WriteLine("Message: " + ex.Message);
+            }
+            finally
+            {
+                if(getListOfWorkers!=null)
+                getListOfWorkers.Dispose();
+            } 
             if (Proverka(worker) ==true)
             { res = true; }
-
-            getListOfWorkers = null;//обрываем ссылку на объект getListOfWorkers
-
+                quantityOfEachPosition = null;
+                Dict = null;
             return res;
         }
-
+       
     }
 }

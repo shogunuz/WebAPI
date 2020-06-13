@@ -6,7 +6,7 @@ using WebAPI.Models;
 
 namespace WebAPI.somefeatures
 {
-    public class GetListOfWorkers
+    public class GetListOfWorkers  : System.IDisposable
     {
         public GetListOfWorkers()
         {
@@ -52,13 +52,16 @@ namespace WebAPI.somefeatures
                     }
                 }
             }
-            request = null;
             return dictionary;
         }
 
         public Dictionary<int, Dictionary<string, string>> GetListOfHolidaysPublic()
         {
             return GetListOfHolidaysTew();
+        }
+
+        public void Dispose()
+        {
         }
     }
 }
