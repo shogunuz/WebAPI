@@ -195,8 +195,6 @@ namespace WebAPI.somefeatures
             } 
             if (Proverka(worker) ==true)
             { res = true; }
-                quantityOfEachPosition = null;
-                Dict = null;
             return res;
         }
        
