@@ -9,8 +9,8 @@ using WebAPI.Models;
 namespace WebAPI.Migrations.WorkerHoliday
 {
     [DbContext(typeof(WorkerHolidayContext))]
-    [Migration("20200531121702_InitialCreateHoliday")]
-    partial class InitialCreateHoliday
+    [Migration("20200614024356_InitCreate")]
+    partial class InitCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -37,7 +37,7 @@ namespace WebAPI.Migrations.WorkerHoliday
 
                     b.Property<string>("FIO")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(35)");
 
                     b.Property<int>("PMId")
                         .HasColumnType("int");

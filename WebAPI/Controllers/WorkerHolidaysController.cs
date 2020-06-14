@@ -26,6 +26,7 @@ namespace WebAPI.Controllers
         public async Task<ActionResult<IEnumerable<WorkerHoliday>>> GetWorkerHolidays()
         {
             FreeMem.CollectMethod();
+            
             return await _context.WorkerHolidays.ToListAsync();
         }
 

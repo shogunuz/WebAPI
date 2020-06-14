@@ -35,7 +35,7 @@ namespace WebAPI.Migrations.WorkerHoliday
 
                     b.Property<string>("FIO")
                         .IsRequired()
-                        .HasColumnType("nvarchar(50)");
+                        .HasColumnType("nvarchar(35)");
 
                     b.Property<int>("PMId")
                         .HasColumnType("int");

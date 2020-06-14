@@ -3,31 +3,21 @@ using System;
 using System.Collections.Generic;
 using WebAPI.Models;
 using System.IO;
+using System.Net;
+using Newtonsoft.Json;
 
 namespace WebAPI.somefeatures
 {
     public class DateRecycle 
     {
         private QuantityOfEachPosition quantityOfEachPosition;
-
-        private Dictionary<int, Dictionary<string, string>> dictionary;
-        public Dictionary<int, Dictionary<string, string>> Dict
-        {
-            get => dictionary;
-            private set => dictionary = value;
-        }
+    
         public DateRecycle()
         {
-            dictionary = new Dictionary<int, Dictionary<string, string>>();
+            quantityOfEachPosition = new QuantityOfEachPosition();
         }
         ~DateRecycle()
         {
-        }
-        private int _numberOfWorkersOnHoliday;
-        private int NumberOfWorkersOnHoliday
-        {
-            get => _numberOfWorkersOnHoliday;
-            set => _numberOfWorkersOnHoliday = value;
         }
          
        
@@ -47,37 +37,51 @@ namespace WebAPI.somefeatures
                 default: break;
             }
         }
-        private void CountingWorkers(WorkerHoliday workerHoliday)
+        private void GetListOfHolidaysTew(WorkerHoliday workerholiday)
         {
-            for (int i = 0; i < NumberOfWorkersOnHoliday; i++)
+            WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
+            using (WebResponse response = request.GetResponse())
+            using (Stream stream = response.GetResponseStream())
+            using (StreamReader streamReader = new StreamReader(stream))
+            using (JsonTextReader reader = new JsonTextReader(streamReader))
             {
-                Int32.TryParse((Dict[i]["PMId"]), out int cnt);
-                DateTime parsedDateStart = DateTime.Parse(Dict[i]["DateStart"]);
-                DateTime parsedDateEnd = DateTime.Parse(Dict[i]["DateEnd"]);
+                reader.SupportMultipleContent = true;
+                var serializer = new JsonSerializer();
+                while (reader.Read())
+                {
+                    if (reader.TokenType == JsonToken.StartObject)
+                    {
+                        WorkerHoliday tmpWorker = serializer.Deserialize<WorkerHoliday>(reader);
 
-                if ((parsedDateStart <= workerHoliday.DateStart && workerHoliday.DateStart <= parsedDateEnd)
-                   || (parsedDateStart <= workerHoliday.DateEnd && workerHoliday.DateEnd <= parsedDateEnd))
-                {
-                    /*
-                     * Каждый раз включаю счётчик чтобы в итоге знать сколько всего сотрудников
-                     * отправлено на отпуск в том периоде, в который собираемся добавить текущего(нового)
-                     * сотрудника.
-                     */
-                    Schetchik(Dict[i]["Position"]);
-                    
-                    //Проверяем сотрудника, на предмет уже имеющегося отпуска в этом периоде
-                    if (cnt == workerHoliday.PMId)
-                        quantityOfEachPosition.Selfself++;
-                }
-                else if ((workerHoliday.DateStart <= parsedDateStart && parsedDateStart <= workerHoliday.DateEnd)
-                 || (workerHoliday.DateStart <= parsedDateEnd && parsedDateEnd <= workerHoliday.DateEnd))
-                {
-                    Schetchik(Dict[i]["Position"]);
-                    if (cnt == workerHoliday.PMId)
-                        quantityOfEachPosition.Selfself++;
+                        DateTime parsedDateStart = DateTime.Parse((tmpWorker.DateStart).ToString());
+                        DateTime parsedDateEnd = DateTime.Parse((tmpWorker.DateEnd).ToString());
+
+                       if ((parsedDateStart <= workerholiday.DateStart && workerholiday.DateStart <= parsedDateEnd)
+                        || (parsedDateStart <= workerholiday.DateEnd && workerholiday.DateEnd <= parsedDateEnd))
+                        {
+                            /*
+                            * Каждый раз включаю счётчик чтобы в итоге знать сколько всего сотрудников
+                            * отправлено на отпуск в том периоде, в который собираемся добавить текущего(нового)
+                            * сотрудника.
+                            */
+                            Schetchik(tmpWorker.Position);
+
+                            //Проверяем сотрудника, на предмет уже имеющегося отпуска в этом периоде
+                            if (tmpWorker.PMId == workerholiday.PMId)
+                                quantityOfEachPosition.Selfself++;
+                        }
+                        else if ((workerholiday.DateStart <= parsedDateStart && parsedDateStart <= workerholiday.DateEnd)
+                              || (workerholiday.DateStart <= parsedDateEnd && parsedDateEnd <= workerholiday.DateEnd))
+                        {
+                            Schetchik(tmpWorker.Position);
+                            if (tmpWorker.PMId == workerholiday.PMId)
+                                quantityOfEachPosition.Selfself++;
+                        }
+                    }
                 }
             }
         }
+
         //Проверяем по алгоритму, чтобы уточнить, не превысилось ли кол-во сотрудников
         //отправленных в отпуск, если метод даст true, значит лимит не превысился
         private bool Proverka(WorkerHoliday worker)
@@ -86,7 +90,6 @@ namespace WebAPI.somefeatures
             switch (worker.Position)
             {
                 case "QA":
-                    CountingWorkers(worker);
                      if (quantityOfEachPosition.Dev == 0&& quantityOfEachPosition.Selfself== 0)
                         {
                             if (quantityOfEachPosition.QA < 3)
@@ -112,7 +115,6 @@ namespace WebAPI.somefeatures
                     
                     break;
                 case "Developer":
-                    CountingWorkers(worker);
                     if (quantityOfEachPosition.TL == 0 && quantityOfEachPosition.Selfself == 0)
                     {
                         if (quantityOfEachPosition.QA < 2)
@@ -144,7 +146,6 @@ namespace WebAPI.somefeatures
                     }
                     break;
                 case "TeamLead":
-                    CountingWorkers(worker);
                     if (quantityOfEachPosition.Dev == 0 && quantityOfEachPosition.Selfself == 0)
                     {
                         if (quantityOfEachPosition.TL < 1)
@@ -169,32 +170,15 @@ namespace WebAPI.somefeatures
 
         public bool HolidayCalc(WorkerHoliday worker)
         {
-            
             bool res = false;
-            GetListOfWorkers getListOfWorkers = new GetListOfWorkers();
-            quantityOfEachPosition = new QuantityOfEachPosition();
-            Dict = new Dictionary<int, Dictionary<string, string>>();
 
-            try
+            if(worker is WorkerHoliday)
             {
-                Dict = getListOfWorkers.GetListOfHolidaysPublic();
-                NumberOfWorkersOnHoliday = getListOfWorkers.NumberOfWorkersOnHoliday;
+                GetListOfHolidaysTew(worker);
+                if (Proverka(worker) == true)
+                { res = true; }
             }
-            catch (Exception ex) {
-                TextWriter errorWriter = Console.Error;
-                errorWriter.WriteLine("!!!Exception of getting Dict from GetListHoliday!!!");
-                errorWriter.WriteLine("Method: " + ex.TargetSite);
-                errorWriter.WriteLine("Class : " + ex.TargetSite.DeclaringType);
-                errorWriter.WriteLine("Member type: " + ex.TargetSite.MemberType);
-                errorWriter.WriteLine("Message: " + ex.Message);
-            }
-            finally
-            {
-                if(getListOfWorkers!=null)
-                getListOfWorkers.Dispose();
-            } 
-            if (Proverka(worker) ==true)
-            { res = true; }
+
             return res;
         }
        

@@ -9,9 +9,9 @@ namespace WebAPI.Models
 {
     public class WorkerDetail
     {
-        private int _id;
-        private string _fio;
-        private string _position;
+        protected int _id;
+        protected string _fio;
+        protected string _position;
 
 
         [Key]
