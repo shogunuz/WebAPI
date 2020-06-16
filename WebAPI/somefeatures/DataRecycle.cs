@@ -19,7 +19,7 @@ namespace WebAPI.somefeatures
         }
          
        
-        private void Schetchik(string position)
+        private void Counter(string position)
         {
             switch (position)
             {
@@ -35,7 +35,7 @@ namespace WebAPI.somefeatures
                 default: break;
             }
         }
-        private void GetListOfHolidaysTew(WorkerHoliday workerholiday)
+        private void GetListOfHolidays(WorkerHoliday workerholiday)
         {
             WebRequest request = WebRequest.Create(UrlLink);
             using (WebResponse response = request.GetResponse())
@@ -45,6 +45,10 @@ namespace WebAPI.somefeatures
             {
                 reader.SupportMultipleContent = true;
                 var serializer = new JsonSerializer();
+                /* Хочу читать по кусочкам, а не целую порцию,
+                 * ибо не факт, что я всегда буду получать маленькую 
+                 * порцию данных.
+                 */
                 while (reader.Read())
                 {
                     if (reader.TokenType == JsonToken.StartObject)
@@ -62,7 +66,7 @@ namespace WebAPI.somefeatures
                             * отправлено на отпуск в том периоде, в который собираемся добавить текущего(нового)
                             * сотрудника.
                             */
-                            Schetchik(tmpWorker.Position);
+                            Counter(tmpWorker.Position);
 
                             //Проверяем сотрудника, на предмет уже имеющегося отпуска в этом периоде
                             if (tmpWorker.PMId == workerholiday.PMId)
@@ -71,7 +75,7 @@ namespace WebAPI.somefeatures
                         else if ((workerholiday.DateStart <= parsedDateStart && parsedDateStart <= workerholiday.DateEnd)
                               || (workerholiday.DateStart <= parsedDateEnd && parsedDateEnd <= workerholiday.DateEnd))
                         {
-                            Schetchik(tmpWorker.Position);
+                            Counter(tmpWorker.Position);
                             if (tmpWorker.PMId == workerholiday.PMId)
                                 Positions.Selfself++;
                         }
@@ -82,7 +86,7 @@ namespace WebAPI.somefeatures
 
         //Проверяем по алгоритму, чтобы уточнить, не превысилось ли кол-во сотрудников
         //отправленных в отпуск, если метод даст true, значит лимит не превысился
-        private bool Proverka(WorkerHoliday worker)
+        private bool IsPossibleToSendToHoliday(WorkerHoliday worker)
         {
             bool res = false;
             switch (worker.Position)
@@ -172,8 +176,8 @@ namespace WebAPI.somefeatures
 
             if(worker is WorkerHoliday)
             {
-                GetListOfHolidaysTew(worker);
-                if (Proverka(worker) == true)
+                GetListOfHolidays(worker);
+                if (IsPossibleToSendToHoliday(worker) == true)
                 { res = true; }
             }
 
