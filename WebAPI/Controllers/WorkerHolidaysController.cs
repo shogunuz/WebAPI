@@ -78,7 +78,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
-            DateRecycle dateRecycle = new DateRecycle();
+            DataRecycle dateRecycle = new DataRecycle();
 
             if (dateRecycle.HolidayCalc(workerHoliday) == false)
             {
@@ -86,8 +86,6 @@ namespace WebAPI.Controllers
             }
             dateRecycle = null; // обрываем все ссылки на объект, на который ссылался dateRecycle
             FreeMem.CollectMethod();
-            
-            
 
             _context.WorkerHolidays.Add(workerHoliday);
                 await _context.SaveChangesAsync();

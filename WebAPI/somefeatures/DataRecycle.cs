@@ -6,16 +6,16 @@ using Newtonsoft.Json;
 
 namespace WebAPI.somefeatures
 {
-    public class DateRecycle 
+    public class DataRecycle 
     {
-        private QuantityOfEachPosition quantityOfEachPosition;
-    
-        public DateRecycle()
+        private QuantityOfEachPosition Positions;
+        private const string QA = "QA";
+        private const string Developer = "Developer";
+        private const string TeamLead = "TeamLead";
+        private const string UrlLink = "https://localhost:44342/api/WorkerHolidays";
+        public DataRecycle()
         {
-            quantityOfEachPosition = new QuantityOfEachPosition();
-        }
-        ~DateRecycle()
-        {
+            Positions = new QuantityOfEachPosition();
         }
          
        
@@ -23,21 +23,21 @@ namespace WebAPI.somefeatures
         {
             switch (position)
             {
-                case "QA":
-                    quantityOfEachPosition.QA++;
+                case QA:
+                    Positions.QA++;
                     break;
-                case "Developer":
-                    quantityOfEachPosition.Dev++;
+                case Developer:
+                    Positions.Dev++;
                     break;
-                case "TeamLead":
-                    quantityOfEachPosition.TL++;
+                case TeamLead:
+                    Positions.TL++;
                     break;
                 default: break;
             }
         }
         private void GetListOfHolidaysTew(WorkerHoliday workerholiday)
         {
-            WebRequest request = WebRequest.Create("https://localhost:44342/api/WorkerHolidays");
+            WebRequest request = WebRequest.Create(UrlLink);
             using (WebResponse response = request.GetResponse())
             using (Stream stream = response.GetResponseStream())
             using (StreamReader streamReader = new StreamReader(stream))
@@ -66,14 +66,14 @@ namespace WebAPI.somefeatures
 
                             //Проверяем сотрудника, на предмет уже имеющегося отпуска в этом периоде
                             if (tmpWorker.PMId == workerholiday.PMId)
-                                quantityOfEachPosition.Selfself++;
+                                Positions.Selfself++;
                         }
                         else if ((workerholiday.DateStart <= parsedDateStart && parsedDateStart <= workerholiday.DateEnd)
                               || (workerholiday.DateStart <= parsedDateEnd && parsedDateEnd <= workerholiday.DateEnd))
                         {
                             Schetchik(tmpWorker.Position);
                             if (tmpWorker.PMId == workerholiday.PMId)
-                                quantityOfEachPosition.Selfself++;
+                                Positions.Selfself++;
                         }
                     }
                 }
@@ -87,10 +87,10 @@ namespace WebAPI.somefeatures
             bool res = false;
             switch (worker.Position)
             {
-                case "QA":
-                     if (quantityOfEachPosition.Dev == 0&& quantityOfEachPosition.Selfself== 0)
+                case QA:
+                     if (Positions.Dev == 0&& Positions.Selfself== 0)
                         {
-                            if (quantityOfEachPosition.QA < 3)
+                            if (Positions.QA < 3)
                             {
                                 res = true;
                             }
@@ -101,7 +101,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (quantityOfEachPosition.QA < 1)
+                            if (Positions.QA < 1)
                             {
                                 res = true;
                             }
@@ -112,12 +112,12 @@ namespace WebAPI.somefeatures
                         }
                     
                     break;
-                case "Developer":
-                    if (quantityOfEachPosition.TL == 0 && quantityOfEachPosition.Selfself == 0)
+                case Developer:
+                    if (Positions.TL == 0 && Positions.Selfself == 0)
                     {
-                        if (quantityOfEachPosition.QA < 2)
+                        if (Positions.QA < 2)
                         {
-                            if (quantityOfEachPosition.Dev < 2)
+                            if (Positions.Dev < 2)
                             {
                                 res = true;
                             }
@@ -128,7 +128,7 @@ namespace WebAPI.somefeatures
                         }
                         else
                         {
-                            if (quantityOfEachPosition.Dev == 0)
+                            if (Positions.Dev == 0)
                             {
                                 res = true;
                             }
@@ -143,10 +143,10 @@ namespace WebAPI.somefeatures
                         res = false;
                     }
                     break;
-                case "TeamLead":
-                    if (quantityOfEachPosition.Dev == 0 && quantityOfEachPosition.Selfself == 0)
+                case TeamLead:
+                    if (Positions.Dev == 0 && Positions.Selfself == 0)
                     {
-                        if (quantityOfEachPosition.TL < 1)
+                        if (Positions.TL < 1)
                         {
                             res = true;
                         }
