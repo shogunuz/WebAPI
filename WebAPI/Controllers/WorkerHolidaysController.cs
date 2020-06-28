@@ -78,13 +78,13 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<WorkerHoliday>> PostWorkerHoliday(WorkerHoliday workerHoliday)
         {
-            DataRecycle dateRecycle = new DataRecycle();
+            IsPossibleAddNewHoliday isPossibleAdd = new IsPossibleAddNewHoliday();
 
-            if (dateRecycle.HolidayCalc(workerHoliday) == false)
+            if (isPossibleAdd.HolidayCalc(workerHoliday) == false)
             {
                 return BadRequest();
             }
-            dateRecycle = null; // обрываем все ссылки на объект, на который ссылался dateRecycle
+            isPossibleAdd = null; // обрываем все ссылки на объект, на который ссылался dateRecycle
             FreeMem.CollectMethod();
 
             _context.WorkerHolidays.Add(workerHoliday);
