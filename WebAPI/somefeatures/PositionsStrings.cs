@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebAPI.somefeatures
 {
-    public class ConstStrings
+    public class PositionsStrings
     {
         internal const string QA = "QA";
         internal const string Dev = "Developer";

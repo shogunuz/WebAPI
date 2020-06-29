@@ -1,7 +1,7 @@
 ﻿
 namespace WebAPI.somefeatures
 {
-    public class QuantityOfEachPosition  
+    public class QuantityOfEachPosition  : IPositions
     {
         private int _qa;
         private int _dev;

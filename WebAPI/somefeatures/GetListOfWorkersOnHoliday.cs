@@ -20,7 +20,7 @@ namespace WebAPI.somefeatures
         }
         private void GetListOfWorkersPr(WorkerHoliday workerholiday)
         {
-            WebRequest request = WebRequest.Create(ConstStrings.UrlLink);
+            WebRequest request = WebRequest.Create(PositionsStrings.UrlLink);
             using (WebResponse response = request.GetResponse())
             using (Stream stream = response.GetResponseStream())
             using (StreamReader streamReader = new StreamReader(stream))
@@ -76,13 +76,13 @@ namespace WebAPI.somefeatures
         {
             switch (position)
             {
-                case ConstStrings.QA:
+                case PositionsStrings.QA:
                     Positions.QA++;
                     break;
-                case ConstStrings.Dev:
+                case PositionsStrings.Dev:
                     Positions.Dev++;
                     break;
-                case ConstStrings.TL:
+                case PositionsStrings.TL:
                     Positions.TL++;
                     break;
                 default: break;

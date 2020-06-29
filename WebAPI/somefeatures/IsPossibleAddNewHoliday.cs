@@ -1,8 +1,4 @@
-﻿using System;
-using WebAPI.Models;
-using System.IO;
-using System.Net;
-using Newtonsoft.Json;
+﻿using WebAPI.Models;
 
 namespace WebAPI.somefeatures
 {
@@ -22,7 +18,7 @@ namespace WebAPI.somefeatures
             bool res = false;
             switch (worker.Position)
             {
-                case ConstStrings.QA:
+                case PositionsStrings.QA:
                      if (getList.Positions.Dev == 0&& getList.Positions.Selfself== 0)
                         {
                             if (getList.Positions.QA < 3)
@@ -47,7 +43,7 @@ namespace WebAPI.somefeatures
                         }
                     
                     break;
-                case ConstStrings.Dev:
+                case PositionsStrings.Dev:
                     if (getList.Positions.TL == 0 && getList.Positions.Selfself == 0)
                     {
                         if (getList.Positions.QA < 2)
@@ -78,7 +74,7 @@ namespace WebAPI.somefeatures
                         res = false;
                     }
                     break;
-                case ConstStrings.TL:
+                case PositionsStrings.TL:
                     if (getList.Positions.Dev == 0 && getList.Positions.Selfself == 0)
                     {
                         if (getList.Positions.TL < 1)
