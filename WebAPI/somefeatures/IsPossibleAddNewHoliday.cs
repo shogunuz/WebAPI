@@ -103,7 +103,7 @@ namespace WebAPI.somefeatures
 
             if(worker is WorkerHoliday)
             {
-                getList.GetListOfWorkersPb(worker);
+                getList.GetListOfWorkers(worker);
                 if (IsPossibleToSendToHoliday(worker) == true)
                 { res = true; }
             }
